@@ -1,29 +1,18 @@
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import Background from "../components/Background";
 import RegisterLeft from "../components/RegisterPage/RegisterLeft";
 import RegisterForm from "../components/RegisterPage/RegisterForm";
+import { useAuth } from "../hooks/useAuth";
+import { registerUser } from "../api/auth";
 
 const Register = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const onSubmit = async (data) => {
-    console.log(data);
-
-    // try {
-    //   const res = await fetch("http://localhost:5000/auth/register", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(data),
-    //   });
-
-    //   const result = await res.json();
-    //   if (!res.ok) throw new Error(result.message);
-
-    //   localStorage.setItem("token", result.token);
-    //   navigate("/dashboard");
-    // } catch (err) {
-    //   console.error(err.message);
-    // }
+    const result = await registerUser(data);
+    login(result.user);
+    navigate("/dashboard");
   };
 
   return (
