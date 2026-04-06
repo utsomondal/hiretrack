@@ -1,43 +1,37 @@
 require("dotenv").config();
-const authRoutes = require("./routes/auth");
-const { MongoClient, ServerApiVersion } = require("mongodb");
 const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const { connectDB } = require("./config/db");
+const authRoutes = require("./routes/auth");
 
 const app = express();
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
-// MongoDB connection
-const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@learning-cluster.4pttlh7.mongodb.net/?appName=learning-cluster`;
+// Routes
+app.use("/auth", authRoutes);
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
+app.get("/", (req, res) => {
+  res.json({ message: "HireTrack API is running" });
 });
 
+// Start server
 async function startServer() {
   try {
-    await client.connect();
-    console.log("MongoDB Connected");
-
-    // Store db so all routes can use it
-    const db = client.db("hiretrack");
-    app.locals.db = db;
-
-    // Routes
-    app.use("/auth", authRoutes);
-
-    app.get("/", (req, res) => {
-      res.json({ message: "HireTrack API is running" });
-    });
+    await connectDB();
 
     app.listen(process.env.PORT || 5000, () => {
       console.log(`Server running on port ${process.env.PORT || 5000}`);
     });
   } catch (err) {
-    console.log("Connection failed ❌", err);
+    console.log("Failed to start", err);
   }
 }
 
