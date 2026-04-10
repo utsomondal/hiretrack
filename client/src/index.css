@@ -11,3 +11,7 @@
   --color-dark-600: #1a1a24;
   --color-dark-500: #4d4d4d;
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
