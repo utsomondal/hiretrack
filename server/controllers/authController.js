@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const { getDB } = require("../config/db");
 const { ObjectId } = require("mongodb");
 
-// Helper: cookie config
+// cookie config
 const getCookieOptions = () => {
   const isProd = process.env.NODE_ENV === "production";
 
@@ -16,7 +16,7 @@ const getCookieOptions = () => {
   };
 };
 
-// register controller
+// register
 const register = async (req, res) => {
   try {
     const db = getDB();
@@ -25,59 +25,61 @@ const register = async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Name, email, and password are required",
+        message: "All fields are required",
       });
     }
 
-    const existingUser = await db.collection("users").findOne({ email });
-    if (existingUser) {
+    const exists = await db.collection("users").findOne({ email });
+
+    if (exists) {
       return res.status(400).json({
         success: false,
-        message: "Email already registered",
+        message: "Email already exists",
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
     const now = new Date().toISOString();
 
     const result = await db.collection("users").insertOne({
       name,
       email,
-      password: hashedPassword,
+      password: hashed,
       createdAt: now,
       updatedAt: now,
     });
 
     const token = jwt.sign(
-      { userId: result.insertedId, email },
+      {
+        userId: result.insertedId.toString(),
+        email,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
 
     res.cookie("token", token, getCookieOptions());
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
-      message: "User registered successfully",
+      message: "User created successfully",
       data: {
-        user: {
-          id: result.insertedId,
-          name,
-          email,
-          createdAt: now,
-        },
+        id: result.insertedId,
+        name,
+        email,
+        createdAt: now,
       },
     });
   } catch (error) {
     console.error("Register error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Server error",
     });
   }
 };
 
-// login controller
+// login
 const login = async (req, res) => {
   try {
     const db = getDB();
@@ -86,7 +88,7 @@ const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Email and password are required",
+        message: "All fields are required",
       });
     }
 
@@ -95,54 +97,55 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Invalid credentials",
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, user.password);
 
-    if (!isMatch) {
+    if (!match) {
       return res.status(400).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Invalid credentials",
       });
     }
 
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      {
+        userId: user._id.toString(),
+        email: user.email,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
 
     res.cookie("token", token, getCookieOptions());
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Login successful",
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-        },
+        id: user._id,
+        name: user.name,
+        email: user.email,
       },
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Server error",
     });
   }
 };
 
-// logout controller
+// logout
 const logout = (req, res) => {
   res.clearCookie("token", getCookieOptions());
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
-    message: "Logout successful",
+    message: "Logged out successfully",
   });
 };
 
@@ -150,6 +153,7 @@ const logout = (req, res) => {
 const getMe = async (req, res) => {
   try {
     const db = getDB();
+
     const user = await db
       .collection("users")
       .findOne(
@@ -163,21 +167,21 @@ const getMe = async (req, res) => {
         message: "User not found",
       });
     }
-    res.status(200).json({
+
+    return res.status(200).json({
       success: true,
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          createdAt: user.createdAt,
-        },
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
       },
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("GetMe error:", error);
+    return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Server error",
     });
   }
 };
