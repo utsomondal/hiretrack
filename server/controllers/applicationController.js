@@ -1,4 +1,5 @@
 const { getDB } = require("../config/db");
+const { ObjectId } = require("mongodb");
 
 // Add application
 const addApplication = async (req, res) => {
@@ -27,7 +28,7 @@ const addApplication = async (req, res) => {
   }
 };
 
-// Get applications for logged-in user
+// Get applications
 const getApplications = async (req, res) => {
   try {
     const db = getDB();
@@ -46,4 +47,24 @@ const getApplications = async (req, res) => {
   }
 };
 
-module.exports = { addApplication, getApplications };
+// Update application
+
+// Delete application
+const deleteApplication = async (req, res) => {
+  try {
+    const db = getDB();
+    const applicationId = req.params.id;
+    await db.collection("applications").deleteOne({
+      _id: new ObjectId(applicationId),
+      userId: req.user.userId,
+    });
+    res.json({
+      success: true,
+      message: "Application deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting application" });
+  }
+};
+
+module.exports = { addApplication, getApplications, deleteApplication };
