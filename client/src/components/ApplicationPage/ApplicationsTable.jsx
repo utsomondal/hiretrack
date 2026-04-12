@@ -1,6 +1,9 @@
 import { useState } from "react";
 import ApplicationRow from "./ApplicationRow";
 import DeleteModal from "./DeleteModal";
+import { useQueryClient } from "@tanstack/react-query";
+import { deleteApplication } from "../../api/application";
+import toast from "react-hot-toast";
 
 const cols = [
   "Company",
@@ -15,9 +18,21 @@ const cols = [
 
 const ApplicationsTable = ({ applications }) => {
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const queryClient = useQueryClient();
 
-  const handleConfirmDelete = () => {
-    setDeleteTarget(null);
+  const handleConfirmDelete = async () => {
+    try {
+      if (!deleteTarget?._id) return;
+
+      await deleteApplication(deleteTarget._id);
+      queryClient.invalidateQueries({ queryKey: ["applications"] });
+
+      setDeleteTarget(null);
+
+      toast.success("Application deleted successfully");
+    } catch {
+      toast.error("Failed to delete application");
+    }
   };
 
   return (
