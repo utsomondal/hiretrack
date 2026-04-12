@@ -34,7 +34,7 @@ const getApplications = async (req, res) => {
 
     const applications = await db
       .collection("applications")
-      .find({ userId: req.user.id })
+      .find({ userId: req.user.userId })
       .toArray();
 
     res.json({
