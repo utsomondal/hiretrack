@@ -11,7 +11,7 @@ const PrivateLayout = () => {
     location.pathname === "/" ? "Dashboard" : location.pathname.slice(1);
 
   return (
-    <div className="flex min-h-screen bg-dark-900">
+    <div className="flex min-h-screen bg-dark-800">
       {/* Sidebar */}
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 

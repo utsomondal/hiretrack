@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <Navbar />
 
           {/* bottom */}
-          <div>
+          <div title="Profile Section">
             <div className="flex items-center gap-3 mb-4 border-t border-dark-500 pt-4">
               <Avatar name={user?.name || "User"} />
 
@@ -80,10 +80,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </div>
 
             <button
+              title="Logout HireTrack"
               onClick={handleLogout}
-              className="w-full flex items-center gap-2 border-t border-dark-500 pt-4"
+              className="w-full flex items-center gap-2 py-2 px-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors duration-150"
             >
-              <IoLogOutOutline size={20} />
+              <IoLogOutOutline size={19} />
               <span>Logout</span>
             </button>
           </div>

@@ -9,12 +9,13 @@ import {
   FiCheckSquare,
 } from "react-icons/fi";
 import { useNavigate } from "react-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createApplication } from "../api/application";
 import toast from "react-hot-toast";
 
 const AddApplication = () => {
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -26,12 +27,19 @@ const AddApplication = () => {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: createApplication,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["applications"] });
+    },
+  });
+
   const onSubmit = async (data) => {
     try {
       const newApplication = {
         ...data,
       };
-      await createApplication(newApplication);
+      await mutation.mutateAsync(newApplication);
       reset();
       toast.success("Application added successfully!");
     } catch (error) {

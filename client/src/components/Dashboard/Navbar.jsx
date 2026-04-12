@@ -14,6 +14,7 @@ const Navbar = () => {
     <nav className="flex flex-col gap-1 mt-4">
       {navItems.map(({ to, label, icon }) => (
         <NavLink
+          title={label}
           key={to}
           to={to}
           className={({ isActive }) =>
