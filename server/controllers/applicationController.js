@@ -7,7 +7,7 @@ const addApplication = async (req, res) => {
 
     const application = {
       ...req.body,
-      userId: req.user.id,
+      userId: req.user.userId,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
