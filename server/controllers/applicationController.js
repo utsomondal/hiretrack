@@ -121,10 +121,61 @@ const deleteApplication = async (req, res) => {
   }
 };
 
+// Get application stats
+const getApplicationStats = async (req, res) => {
+  try {
+    const db = getDB();
+    const userId = req.user.userId;
+    const stats = await db
+      .collection("applications")
+      .aggregate([
+        {
+          $match: { userId },
+        },
+        {
+          $group: {
+            _id: null,
+            totalApplied: { $sum: 1 },
+            inProgress: {
+              $sum: {
+                $cond: [{ $eq: ["status", "Screening"] }, 1, 0],
+              },
+            },
+            interviewed: {
+              $sum: {
+                $cond: [{ $eq: ["status", "Interview"] }, 1, 0],
+              },
+            },
+            offered: {
+              $sum: {
+                $cond: [{ $eq: ["status", "Offer"] }, 1, 0],
+              },
+            },
+          },
+        },
+      ])
+      .toArray();
+    const result = stats[0] || {
+      totalApplied: 0,
+      inProgress: 0,
+      interviewed: 0,
+      offered: 0,
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   addApplication,
   getApplications,
   getApplicationById,
   updateApplication,
   deleteApplication,
+  getApplicationStats,
 };
