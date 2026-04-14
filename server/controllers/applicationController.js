@@ -47,7 +47,61 @@ const getApplications = async (req, res) => {
   }
 };
 
+// Get application by ID
+const getApplicationById = async (req, res) => {
+  try {
+    const db = getDB();
+    const applicationId = req.params.id;
+    const application = await db
+      .collection("applications")
+      .findOne({ _id: new ObjectId(applicationId), userId: req.user.userId });
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.json({
+      success: true,
+      data: application,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching application" });
+  }
+};
+
 // Update application
+const updateApplication = async (req, res) => {
+  try {
+    const db = getDB();
+    const applicationId = req.params.id;
+    const { _id, userId, createdAt, ...updateData } = req.body;
+
+    const result = await db.collection("applications").updateOne(
+      {
+        _id: new ObjectId(applicationId),
+        userId: req.user.userId,
+      },
+      {
+        $set: {
+          ...updateData,
+          updatedAt: new Date(),
+        },
+      },
+    );
+
+    if (!result.matchedCount) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Application updated successfully",
+    });
+  } catch (error) {
+    console.error("Update application error:", error);
+    res.status(500).json({ message: "Error updating application" });
+  }
+};
 
 // Delete application
 const deleteApplication = async (req, res) => {
@@ -67,4 +121,10 @@ const deleteApplication = async (req, res) => {
   }
 };
 
-module.exports = { addApplication, getApplications, deleteApplication };
+module.exports = {
+  addApplication,
+  getApplications,
+  getApplicationById,
+  updateApplication,
+  deleteApplication,
+};

@@ -22,7 +22,7 @@ app.use(express.json());
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/api/applications", applicationRoutes);
+app.use("/applications", applicationRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "HireTrack API is running" });
