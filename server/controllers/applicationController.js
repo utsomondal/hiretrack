@@ -138,17 +138,17 @@ const getApplicationStats = async (req, res) => {
             totalApplied: { $sum: 1 },
             inProgress: {
               $sum: {
-                $cond: [{ $eq: ["status", "Screening"] }, 1, 0],
+                $cond: [{ $eq: ["$status", "Screening"] }, 1, 0],
               },
             },
             interviewed: {
               $sum: {
-                $cond: [{ $eq: ["status", "Interview"] }, 1, 0],
+                $cond: [{ $eq: ["$status", "Interview"] }, 1, 0],
               },
             },
             offered: {
               $sum: {
-                $cond: [{ $eq: ["status", "Offer"] }, 1, 0],
+                $cond: [{ $eq: ["$status", "Offer"] }, 1, 0],
               },
             },
           },
