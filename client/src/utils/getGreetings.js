@@ -8,7 +8,8 @@ export const getGreetings = () => {
     return {
       icon: BsSunrise,
       greeting: "Good morning",
-      subtext: "Plan your day ahead",
+      subtext: "Start strong — plan your applications",
+      cta: "Add Application",
     };
   }
 
@@ -16,21 +17,24 @@ export const getGreetings = () => {
     return {
       icon: IoSunnyOutline,
       greeting: "Good afternoon",
-      subtext: "Keep your momentum going",
+      subtext: "Keep the momentum going",
+      cta: "Track Progress",
     };
   }
 
-  if (hour < 21) {
+  if (hour < 22) {
     return {
       icon: BsSunset,
       greeting: "Good evening",
-      subtext: "Time to wrap things up",
+      subtext: "Wrap up and review your day",
+      cta: "Review Applications",
     };
   }
 
   return {
     icon: IoMoonOutline,
-    greeting: "Good evening",
-    subtext: "Focus mode active",
+    greeting: "Still working?",
+    subtext: "Late night grind — stay focused",
+    cta: "Quick Add",
   };
 };
