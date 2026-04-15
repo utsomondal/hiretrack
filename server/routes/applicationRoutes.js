@@ -9,6 +9,7 @@ const {
   deleteApplication,
   getApplicationById,
   getApplicationStats,
+  getRecentApplications,
 } = require("../controllers/applicationController.js");
 
 // Create application
@@ -20,6 +21,9 @@ router.get("/", protect, getApplications);
 // Get application stats
 router.get("/stats", protect, getApplicationStats);
 
+// Get recent applications
+router.get("/recent", protect, getRecentApplications);
+
 // Get single application
 router.get("/:id", protect, getApplicationById);
 
@@ -28,5 +32,7 @@ router.patch("/:id", protect, updateApplication);
 
 // Delete application
 router.delete("/:id", protect, deleteApplication);
+
+
 
 module.exports = router;

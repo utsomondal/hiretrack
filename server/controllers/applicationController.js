@@ -171,6 +171,38 @@ const getApplicationStats = async (req, res) => {
   }
 };
 
+// Get recent applications
+const getRecentApplications = async (req, res) => {
+  try {
+    const db = getDB();
+    const limit = Math.min(parseInt(req.query.limit) || 5, 20);
+    const applications = await db
+      .collection("applications")
+      .find({ userId: req.user.userId })
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .project({
+        company: 1,
+        role: 1,
+        status: 1,
+        createdAt: 1,
+      })
+      .toArray();
+
+    res.status(200).json({
+      success: true,
+      count: applications.length,
+      data: applications,
+    });
+  } catch (error) {
+    console.error("Error fetching recent applications:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch recent applications",
+    });
+  }
+};
+
 module.exports = {
   addApplication,
   getApplications,
@@ -178,4 +210,5 @@ module.exports = {
   updateApplication,
   deleteApplication,
   getApplicationStats,
+  getRecentApplications,
 };
