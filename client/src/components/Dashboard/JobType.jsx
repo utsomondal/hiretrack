@@ -18,14 +18,14 @@ const JobType = () => {
     : [];
 
   return (
-    <div className="w-full h-85">
+    <div className="w-full h-84">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={chartData}
             dataKey="value"
-            outerRadius={140}
-            innerRadius={70}
+            outerRadius={120}
+            innerRadius={60}
             paddingAngle={0}
             label={({ name, percent }) =>
               `${name}:(${(percent * 100).toFixed(0)}%)`

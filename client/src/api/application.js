@@ -47,3 +47,8 @@ export const getRecentApplications = async (limit = 5) => {
 export const getJobType = async () => {
   return apiFetch("/applications/type");
 };
+
+// GET APPLICATION TIMELINE
+export const getApplicationTimeline =async ()=>{
+  return apiFetch("/applications/timeline")
+}

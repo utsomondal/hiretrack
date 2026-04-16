@@ -3,6 +3,7 @@ import DashboardCardHolder from "../components/Dashboard/DashboardCardHolder";
 import RecentApplications from "../components/Dashboard/RecentApplications";
 import { Link } from "react-router";
 import JobType from "../components/Dashboard/JobType";
+import ApplicationTimeline from "../components/Dashboard/ApplicationTimeline";
 
 const Dashboard = () => {
   return (
@@ -37,6 +38,13 @@ const Dashboard = () => {
               <JobType />
             </div>
           </div>
+        </div>
+      </div>
+      
+      <div>
+        <p className="text-sm font-medium mb-4">Applications Over Time</p>
+        <div className="bg-dark-700/80 border border-white/10 rounded-2xl flex flex-col backdrop-blur-xl shadow-sm">
+          <ApplicationTimeline />
         </div>
       </div>
     </div>
