@@ -14,9 +14,12 @@ app.set("trust proxy", 1);
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: [
+      "http://localhost:5173",
+      "https://careerlogr.vercel.app"
+    ],
     credentials: true,
-  }),
+  })
 );
 app.use(express.json());
 
