@@ -15,7 +15,7 @@ let db
 
 const connectDB = async () => {
   await client.connect()
-  db = client.db('hiretrack')
+  db = client.db('careerlogr')
   console.log('MongoDB Connected')
 }
 

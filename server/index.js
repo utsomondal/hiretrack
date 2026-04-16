@@ -9,29 +9,31 @@ const applicationRoutes = require("./routes/applicationRoutes.js");
 
 const app = express();
 
-app.use(cookieParser());
+app.set("trust proxy", 1);
 
+app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   }),
 );
-
 app.use(express.json());
 
-// Routes
 app.use("/auth", authRoutes);
 app.use("/applications", applicationRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ message: "HireTrack API is running" });
+  res.json({ message: "CareerLogr API is running" });
+});
+
+app.get("/health", (req, res) => {
+  res.send("OK");
 });
 
 async function startServer() {
   try {
     await connectDB();
-
     app.listen(process.env.PORT || 5000, () => {
       console.log(`Server running on port ${process.env.PORT || 5000}`);
     });
