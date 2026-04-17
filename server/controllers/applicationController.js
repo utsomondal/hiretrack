@@ -52,6 +52,13 @@ const getApplicationById = async (req, res) => {
   try {
     const db = getDB();
     const applicationId = req.params.id;
+
+    if (!ObjectId.isValid(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application ID",
+      });
+    }
     const application = await db
       .collection("applications")
       .findOne({ _id: new ObjectId(applicationId), userId: req.user.userId });
@@ -74,6 +81,13 @@ const updateApplication = async (req, res) => {
   try {
     const db = getDB();
     const applicationId = req.params.id;
+
+    if (!ObjectId.isValid(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application ID",
+      });
+    }
     const { _id, userId, createdAt, ...updateData } = req.body;
 
     const result = await db.collection("applications").updateOne(
@@ -108,16 +122,35 @@ const deleteApplication = async (req, res) => {
   try {
     const db = getDB();
     const applicationId = req.params.id;
-    await db.collection("applications").deleteOne({
+
+    if (!ObjectId.isValid(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application ID",
+      });
+    }
+
+    const result = await db.collection("applications").deleteOne({
       _id: new ObjectId(applicationId),
       userId: req.user.userId,
     });
-    res.json({
+
+    if (!result.deletedCount) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found",
+      });
+    }
+
+    return res.status(200).json({
       success: true,
       message: "Application deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting application" });
+    return res.status(500).json({
+      success: false,
+      message: "Error deleting application",
+    });
   }
 };
 

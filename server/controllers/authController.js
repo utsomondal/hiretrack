@@ -5,10 +5,12 @@ const { ObjectId } = require("mongodb");
 
 // cookie config
 const getCookieOptions = () => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   return {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   };
@@ -139,7 +141,14 @@ const login = async (req, res) => {
 
 // logout
 const logout = (req, res) => {
-  res.clearCookie("token", getCookieOptions());
+  const isProduction = process.env.NODE_ENV === "production";
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
+  });
 
   return res.status(200).json({
     success: true,
