@@ -128,12 +128,6 @@ Session validation is handled using backend middleware that:
 
 ---
 
-# 📊 Data Flow Diagram
-
-(Add your Level 1 DFD here from draw.io)
-
----
-
 # 🧠 Why I built this project
 
 This project was created to solve a personal workflow problem:
