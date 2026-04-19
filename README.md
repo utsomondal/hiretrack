@@ -1,76 +1,117 @@
-# 📊 CareerLogr
+Got it — your current README is solid but has repetition and a slightly confused DFD/architecture section (you repeat “Architecture”, “Data Flow”, and “Session flow” in overlapping ways).
 
-CareerLogr is a full-stack CRUD application designed to help users track and manage their job applications in one place.
-
-It was built from a real personal problem:  
-managing job applications using scattered notes, Excel sheets, and memory became difficult — so this app centralizes everything into a simple, structured system.
+Here’s a **cleaned, de-duplicated, GitHub-ready README.md** with a **clear separation between Architecture vs Data Flow Diagram (DFD concept corrected)**:
 
 ---
 
-# 💡 Problem Statement
+```md
+# 🚀 CareerLogr  
+### *Track. Apply. Get hired — all in one place.*
 
-When applying for jobs, it becomes hard to track:
+CareerLogr is a **modern job application tracker** that helps you organize, monitor, and optimize your entire job-hunting journey in one clean dashboard.
 
-- Where you applied
-- Company details
-- Application status
-- Interview progress
-- Follow-ups
-
-Most people end up using Excel sheets or random notes.
-
-CareerLogr solves this by providing a **centralized job application tracker**.
+Built to replace messy spreadsheets, scattered notes, and forgotten applications.
 
 ---
 
-# 🚀 Features
+## 🌐 Overview
 
-## 📦 Core CRUD System
-- Add job applications
-- Update application details
-- Delete applications
-- View all applications in one dashboard
+CareerLogr centralizes your job search workflow — from application tracking to interview progress — in one structured system.
+
+---
+
+# ✨ Problem It Solves
+
+Job searching becomes chaotic when using spreadsheets or notes.
+
+Common issues:
+- ❌ Losing track of applications  
+- ❌ Missing follow-ups  
+- ❌ No clear pipeline visibility  
+- ❌ Disorganized job history  
+
+CareerLogr solves this with a structured, visual workflow.
+
+---
+
+# ⚡ Core Features
+
+## 📦 Application Management
+- Create job applications  
+- Update status (Applied / Interview / Offer / Rejected)  
+- Delete applications  
+- View all applications in one dashboard  
+
+---
 
 ## 🔐 Authentication
-- User registration & login
-- JWT-based authentication
-- Secure HTTP-only cookie sessions
-
-## 📊 Dashboard Overview
-- Total applications
-- Status tracking (applied, interview, rejected, etc.)
-- Simple analytics view
+- User registration & login  
+- JWT authentication  
+- HTTP-only cookie sessions  
+- Protected API routes  
 
 ---
 
-# 🧠 System Overview
-
-CareerLogr follows a simple 3-layer architecture:
-
-- Frontend: React (UI)
-- Backend: Node.js + Express (API logic)
-- Database: MongoDB (data storage)
+## 📊 Dashboard & Analytics
+- Total applications overview  
+- Status-based breakdown  
+- Visual charts (Recharts)  
+- Fast filtering system  
 
 ---
 
-# 🔁 Data Flow (Level 1 Concept)
-![Data Flow Diagram](./diagrams/careerlogr_dfd.png)
+# 🏗️ System Architecture
 
-1. User registers or logs in  
-2. Backend generates JWT token  
-3. Token is stored in browser cookie  
-4. Every request goes through session validation middleware  
-5. If valid → CRUD operations allowed  
-6. If invalid → 401 Unauthorized  
+CareerLogr follows a **3-layer architecture**:
+
+```
+
+Frontend (React) → Backend (Express API) → Database (MongoDB)
+
+```
+
+### Responsibilities:
+- **Frontend** → UI, state, visualization  
+- **Backend** → Business logic, authentication, APIs  
+- **Database** → Persistent application data  
 
 ---
 
-# ⚙️ Tech Stack
+# 🔁 Data Flow (DFD Concept)
+
+This is the **actual Data Flow Diagram (DFD-level explanation)**:
+
+### Level 0 (High Level Flow)
+```
+
+User → Frontend → Backend → Database → Backend → Frontend → User
+
+```
+
+### Level 1 (Authentication Flow)
+1. User submits login/register form  
+2. Backend validates credentials  
+3. JWT token is generated  
+4. Token stored in HTTP-only cookie  
+5. Middleware verifies token on each request  
+6. User gains access to protected routes  
+
+### Level 1 (Application Flow)
+1. User creates/updates application  
+2. Request sent to API  
+3. Backend processes request  
+4. Data stored in MongoDB  
+5. Updated data returned to frontend  
+6. UI updates dashboard  
+
+---
+
+# 🧰 Tech Stack
 
 ## Frontend
 - React (Vite)
 - React Router
-- React Query (TanStack Query)
+- TanStack Query
 - Tailwind CSS
 - Recharts
 - React Hook Form
@@ -80,7 +121,7 @@ CareerLogr follows a simple 3-layer architecture:
 - Node.js
 - Express.js
 - MongoDB (Native Driver)
-- JWT (jsonwebtoken)
+- JWT
 - bcryptjs
 - cookie-parser
 - cors
@@ -88,94 +129,81 @@ CareerLogr follows a simple 3-layer architecture:
 
 ---
 
-# 🔐 Authentication Flow
+# 📦 API Routes
 
-- User logs in / registers
-- Server validates credentials
-- JWT token is created
-- Token is stored in HTTP-only cookie
-- Browser automatically sends cookie with every request
-- Backend middleware verifies token
-- Access granted or denied
+## Authentication
+```
 
----
+POST /auth/register
+POST /auth/login
+GET  /auth/me
 
-# 📦 API Structure
+```
 
-## Auth Routes
-- `POST /auth/register`
-- `POST /auth/login`
-- `GET /auth/me`
+## Applications (Protected)
+```
 
-## Application Routes
-- `GET /applications`
-- `POST /applications`
-- `PUT /applications/:id`
-- `DELETE /applications/:id`
+GET    /applications
+POST   /applications
+PUT    /applications/:id
+DELETE /applications/:id
 
-(All application routes are protected)
+```
 
 ---
 
-# 🧩 Key Concept: Session Validation
+# 🔐 Security Flow
 
-Session validation is handled using backend middleware that:
-
-- Extracts JWT from cookie
-- Verifies it using server secret
-- Attaches user identity to request
-- Blocks unauthorized access (401)
-
----
-
-# 📊 Data Flow Diagram
-
-(Add your Level 1 DFD here from draw.io)
-
----
-
-# 🧠 Why I built this project
-
-This project was created to solve a personal workflow problem:
-
-> “I needed a simple way to track where I applied, instead of relying on Excel sheets and scattered notes.”
+- JWT generated on login  
+- Stored in HTTP-only cookie  
+- Verified via middleware on each request  
+- Unauthorized requests return `401`  
 
 ---
 
 # 📁 Project Structure
 
-## Client
-- React-based UI
-- Dashboard and forms
-- API integration using React Query
+```
 
-## Server
-- REST API with Express
-- Authentication system (JWT)
-- CRUD logic for applications
-- MongoDB database integration
+careerlogr/
+├── client/     # React frontend
+├── server/     # Express backend
+├── diagram/    # DFD / architecture diagrams
+└── README.md
 
----
-
-# ⚠️ Important Notes
-
-- JWT is verified in backend middleware (not database)
-- Database is only for storing data
-- Cookies are handled automatically by the browser
-- Frontend handles UI routing after auth state
+```
 
 ---
 
-# 📈 Future Improvements
+# 🚧 Roadmap
 
-- Filter & search applications
-- Status pipeline (applied → interview → offer)
-- Resume attachment upload
-- Email reminders for follow-ups
-- Advanced analytics dashboard
+- Search & filtering system  
+- Kanban-style pipeline view  
+- Resume upload feature  
+- Email reminders  
+- Advanced analytics dashboard  
+
+---
+
+# 🎯 Design Principles
+
+- Clean UI  
+- Fast performance  
+- Minimal interactions  
+- Scalable architecture  
+- Developer-friendly structure  
 
 ---
 
 # 📜 License
 
 ISC
+
+---
+
+# ⚡ Summary
+
+CareerLogr is a **structured job application system** designed to replace chaos with clarity — giving you full control over your job search workflow.
+```
+
+---
