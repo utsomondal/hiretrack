@@ -54,7 +54,7 @@ CareerLogr follows a simple 3-layer architecture:
 ---
 
 # 🔁 Data Flow (Level 1 Concept)
-![Data Flow Diagram](./assets/careerlogr_dfd.png)
+![Data Flow Diagram](./diagrams/careerlogr_dfd.png)
 
 1. User registers or logs in  
 2. Backend generates JWT token  
